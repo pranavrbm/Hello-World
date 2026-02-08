@@ -1,0 +1,40 @@
+name: FastAPI CI/CD
+
+# Trigger on every push to the main branch
+on:
+    push:
+        branches: ["main"]
+
+jobs:
+    # JOB 1: Test the Code
+    test-api:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.10"
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+            # This is the "Smoke Test" we discussed.
+            # It tries to import 'app' from 'main.py'. If your code has syntax errors, this will fail.
+            - name: Smoke Test (Check if main.py works)
+              run: |
+                  python -c "from main import app; print('✅ Main.py loaded successfully!')"
+
+    # JOB 2: Deploy to Render (Only runs if Test passes)
+    deploy:
+        needs: test-api
+        runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/main'
+        steps:
+            - name: Trigger Render Deploy
+              # This silently visits the URL to tell Render "Update the site now!"
+              run: curl "${{ secrets.RENDER_DEPLOY_HOOK }}"
