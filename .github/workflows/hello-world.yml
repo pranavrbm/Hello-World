@@ -1,0 +1,11 @@
+name: My First Action
+on: [push] # The Trigger
+
+jobs:
+  greet-me:
+    runs-on: ubuntu-latest # The Virtual Machine
+    steps:
+      - name: Say Hello
+        run: echo "Hello! GitHub Actions is running successfully."
+      - name: Check the date
+        run: date
