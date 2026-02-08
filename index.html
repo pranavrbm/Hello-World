@@ -33,7 +33,7 @@
 					const response = await fetch(API_URL);
 					const data = await response.json();
 					// Since your API returns a set/list {"Hello world"}, we access the first element
-					document.getElementById("message").innerText = data[0];
+					document.getElementById("message").innerText = data.message;
 				} catch (error) {
 					document.getElementById("message").innerText =
 						"Error connecting to backend.";
