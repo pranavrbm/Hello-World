@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  # Service 1: Your Python App
+  fastapi-backend:
+    build: .
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    # We DO NOT expose port 8000 to the outside. Only Nginx can talk to it!
+
+  # Service 2: Nginx (The Waiter)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80" # Open Port 80 to your laptop
+    volumes:
+      # Map your config file into the container
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      # Map your HTML file into the container
+      - ./static:/usr/share/nginx/html
+    depends_on:
+      - fastapi-backend # Wait for Python to start before starting Nginx
