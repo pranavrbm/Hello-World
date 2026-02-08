@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>FastAPI Frontend</title>
+		<style>
+			body {
+				font-family: sans-serif;
+				display: flex;
+				justify-content: center;
+				margin-top: 50px;
+			}
+			.card {
+				border: 1px solid #ddd;
+				padding: 20px;
+				border-radius: 8px;
+				box-shadow: 2px 2px 10px #eee;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="card">
+			<h1>Server Response:</h1>
+			<p id="message">Loading...</p>
+		</div>
+
+		<script>
+			// Replace this URL with your actual backend URL once deployed
+			const API_URL = "http://127.0.0.1:8000/hello-world";
+
+			async function getData() {
+				try {
+					const response = await fetch(API_URL);
+					const data = await response.json();
+					// Since your API returns a set/list {"Hello world"}, we access the first element
+					document.getElementById("message").innerText = data[0];
+				} catch (error) {
+					document.getElementById("message").innerText =
+						"Error connecting to backend.";
+					console.error(error);
+				}
+			}
+
+			getData();
+		</script>
+	</body>
+</html>
